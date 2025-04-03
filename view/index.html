@@ -45,6 +45,7 @@
       .center{
         right: 40%;
         z-index: 9999;
+        pointer-events: all;
       }
 
       .left {
@@ -177,7 +178,10 @@
       );
     </script>
     <script type="module">
-      
+      const Vehicle = require("./model/vehicle")
+      var vehicle = new Vehicle()
+      console.log("running module")
+      setInterval(function(){console.log(vehicle.position); vehicle.move(); }, 1000)
     </script>
   </body>
 </html>

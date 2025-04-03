@@ -9,8 +9,9 @@
     "nodejs"
   ],
   "dependencies": {
-    "joystick-controller": "^1.1.1",
     "express": "^5.1.0",
+    "joystick-controller": "^1.1.1",
+    "moment": "^2.30.1",
     "mongodb": "^6.15.0"
   }
 }

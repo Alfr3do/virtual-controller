@@ -1,0 +1,57 @@
+class Vehicle {
+  MAX_CHANGE = 0.0001;
+  constructor() {
+    this.position = {lat:25.824617,lon:-80.156593};
+    this.heading = 0;
+    this.velocity = 1;
+    this.dampening = 0.01;
+  }
+
+  throtle(){
+    this.velocity += 1;
+  }
+
+  measure(lat1, lon1, lat2, lon2){  // generally used geo measurement function
+    var R = 6378.137; // Radius of earth in KM
+    var dLat = lat2 * Math.PI / 180 - lat1 * Math.PI / 180;
+    var dLon = lon2 * Math.PI / 180 - lon1 * Math.PI / 180;
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var d = R * c;
+    return d * 1000; // meters
+}
+  //maximun change is 0.0001 ~ 10 meters
+  move() {
+    if (this.velocity == 0){
+        return;
+    }
+    const dLat = this.velocity*MAX_CHANGE*Math.sin(this.heading) 
+    const dLon = this.velocity*MAX_CHANGE*Math.cos(this.heading)
+    if (0 < this.velocity){
+        //Move forward
+        this.position = {lat:this.position.lat+dLat, lon:this.position.lon+dLon}
+        this.velocity -= this.dampening
+    }else{
+        //Move backwards
+        this.position = {lat:this.position.lat-dLat, lon:this.position.lon-dLon}
+        this.velocity += this.dampening
+    }
+  }
+  rotate(clockwise=true){
+    if (clockwise){
+        this.heading += 0.1
+        while ( 2*Math.PI < this.heading ){
+            this.heading -= 2*Math.PI
+        }
+    }else{
+        this.heading -= 0.1
+        while ( this.heading < 0 ){
+            this.heading += 2*Math.PI
+        }
+    }
+  }
+}
+
+module.exports = Vehicle;

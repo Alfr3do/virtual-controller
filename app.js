@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const router = express.Router();
 const { MongoClient } = require('mongodb');
+const moment = require('moment');
 
 USER_NAME = "alfre"
 PASSWD = "Pollux11"
@@ -35,22 +36,29 @@ router.get('/', function(req,res){
 });
 
 router.get('/sendData', async function(req,res){
-  
+  let asv = "";
   try {
     // Connect to the MongoDB cluster
     await client.connect();
 
-    // Make the appropriate DB calls
-    await  listDatabases(client);
-    text = "";
-    databasesList.databases.forEach(db => text += ` - ${db.name}`);
+    const database = await  client.db("db");
+    const collection = await database.collection("swarm2");
+    //yyyy-mm-dd:hh:mm:ss'
+    const doc  = {"metadata":{"asvid":20,"type":"temperature"},
+                  "timestamp":moment().format("yyyy-MM-DDThh:mm:ss.000+00:00"),
+                  "temp":12,
+                  "latitude":25.824617,
+                  "longitude": -80.156593
+                 }
+    result = await collection.insertOne(doc)
+    console.log(asv)
 
   } catch (e) {
       console.error(e);
   } finally {
       await client.close();
   }
-  res.send(text);
+  res.send(asv);
 });
 
 app.use(express.static(path));
