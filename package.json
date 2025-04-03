@@ -1,0 +1,16 @@
+{
+  "name": "controller",
+  "version": "1.0.0",
+  "description": "Virtual controler",
+  "author": "Alfr3",
+  "license": "MIT",
+  "main": "app.js",
+  "keywords": [
+    "nodejs"
+  ],
+  "dependencies": {
+    "joystick-controller": "^1.1.1",
+    "express": "^5.1.0",
+    "mongodb": "^6.15.0"
+  }
+}
