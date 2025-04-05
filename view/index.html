@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Static Positioning JoyStick Example</title>
+    <title>Heron Controller</title>
     <style>
       * {
         margin: 0;
@@ -78,8 +78,8 @@
       <p>Angle: <span id="angle"></span></p>
     </div>
     <div class="info center">
-      <input type="text"/>
-      <button type="button">Send</button>
+      <input type="text" id="secretH"/>
+      <!--button type="button">Send</button-->
     </div>
     <div class="info right">
       <p>X: <span id="x2"></span></p>
@@ -110,14 +110,14 @@
       const yLeveled = document.querySelector("#yLeveled");
       const distance = document.querySelector("#distance");
       const angle = document.querySelector("#angle");
-
+      
       const x2 = document.querySelector("#x2");
       const y2 = document.querySelector("#y2");
       const xLeveled2 = document.querySelector("#xLeveled2");
       const yLeveled2 = document.querySelector("#yLeveled2");
       const distance2 = document.querySelector("#distance2");
       const angle2 = document.querySelector("#angle2");
-
+      
       window.joystickHandlers = {
         leftJoystickHandler: {
           x: 0,
@@ -128,7 +128,7 @@
           y: 0,
         },
       };
-
+      
       const leftJoystick = new JoystickController(
         {
           x: "30%",
@@ -152,9 +152,9 @@
           window.joystickHandlers.leftJoystickHandler.x = data.leveledX;
           window.joystickHandlers.leftJoystickHandler.y = data.leveledY;
         }
-      );
-      const rightJoystick = new JoystickController(
-        {
+        );
+        const rightJoystick = new JoystickController(
+          {
           x: "20%",
           y: "20%",
           leftToRight: false,
@@ -177,11 +177,36 @@
         }
       );
     </script>
+    <script src="./model/vehicle.js" type="module"></script>
+    <script > var last = {lat:0, lon:0}
+      //-80.148268,25.866097
+      function gaussian2D(x, y, centerX, centerY, amplitude, sigma) {
+        const exponent = -((x - centerX) ** 2 + (y - centerY) ** 2) / (2 * sigma ** 2);
+        return amplitude * Math.exp(exponent);
+      }  
+    </script>  
     <script type="module">
-      const Vehicle = require("./model/vehicle")
+      import { Vehicle } from './model/vehicle.js';
       var vehicle = new Vehicle()
+      last = vehicle.position        
       console.log("running module")
-      setInterval(function(){console.log(vehicle.position); vehicle.move(); }, 1000)
+      setInterval(
+        async function(){
+          
+          //console.log(vehicle.position, vehicle.velocity, vehicle.heading); 
+          vehicle.throtle(joystickHandlers.leftJoystickHandler.y / 50)
+          vehicle.rotate(joystickHandlers.rightJoystickHandler.x / -10)
+          vehicle.move();
+          var secret = document.querySelector("#secretH").value
+          if (!secret) secret = "xxx"
+          console.log("secret = "+secret)
+          if (vehicle.position != last){
+            last = vehicle.position
+            var intentsity = gaussian2D(vehicle.position.lon,vehicle.position.lat,-80.148268,25.866097,1,0.03)
+            let res = await fetch('http://localhost:8085/sendData/'+vehicle.position.lat+'/'+vehicle.position.lon+'/'+vehicle.heading+'/'+intentsity+"/"+secret)
+         }else{console.log("no change")}}, 1000)
+
     </script>
   </body>
-</html>
+  </html>
+  
