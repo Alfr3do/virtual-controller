@@ -35,7 +35,7 @@ router.get('/', function(req,res){
 
 router.get('/newSecret/:secret', async function(req,res){
   let asv = "";
-  const client = new MongoClient(yourConnectionURI);
+  const client = new MongoClient(yourConnectionURI, {autoSelectFamily: false});
   try {
     //Connect to the MongoDB cluster
     await client.connect();
@@ -54,9 +54,10 @@ res.send(asv);
 });
 
 router.get('/sendData/:lat/:lon/:head/:temp/:secret', async function(req,res){
+  
   let asv = "";
   //console.log(req.params.lat, req.params.lon)
-  const client = new MongoClient(yourConnectionURI);
+  const client = new MongoClient(yourConnectionURI, {autoSelectFamily: false});
   try {
     // Connect to the MongoDB cluster
     await client.connect();
