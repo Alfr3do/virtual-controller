@@ -9,6 +9,7 @@
     "nodejs"
   ],
   "dependencies": {
+    "blockly": "^11.2.2",
     "express": "^5.1.0",
     "joystick-controller": "^1.1.1",
     "moment": "^2.30.1",

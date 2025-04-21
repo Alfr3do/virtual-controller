@@ -32,6 +32,9 @@ router.get('/test/:lat/:lon', function(req,res)
 router.get('/', function(req,res){
   res.sendFile(path + 'index.html');
 });
+router.get('/blocks', function(req,res){
+  res.sendFile(path + 'blocks.html');
+});
 
 router.get('/newSecret/:secret', async function(req,res){
   let asv = "";

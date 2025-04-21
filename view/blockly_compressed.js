@@ -1,0 +1,1 @@
+../node_modules/blockly/blockly_compressed.js

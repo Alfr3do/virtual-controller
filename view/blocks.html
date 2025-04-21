@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<!-- HTML file to host Blockly in a mobile WebView. -->
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <style type="text/css">
+    html, body, #blocklyDiv {
+      border: 0;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    };
+    
+  </style>
+  <script src="blockly_compressed.js"></script>
+  <script src="blocks_compressed.js"></script>
+  <!-- TODO: Select msg file based on locale. -->
+  <script src="msg/en.js"></script>
+  <script src="toolbox_standard.js"></script>
+  <script src="javascript_compressed.js"></script>
+</head>
+<body>
+  <div id="play" style=" position:absolute; right:10px; top: 5px; z-index: 1;"><button id="showcode" onclick="showCode()">Show Code</button></div>
+  <div id="blocklyDiv"></div>
+  <script type="text/javascript">
+    Blockly.defineBlocksWithJsonArray([
+    {
+      "type": "Vehicle",
+      "tooltip": "",
+      "helpUrl": "",
+      "message0": "Surface Vehicle %1 Latitude %2 Longitude %3",
+      "args0": [
+        {
+          "type": "input_dummy",
+          "name": "NAME"
+        },
+        {
+          "type": "input_value",
+          "name": "latitute",
+      "check": "Number"
+        },
+        {
+          "type": "input_value",
+          "name": "longitue",
+      "check": "Number"
+        }
+      ],
+      "nextStatement": null,
+      "colour": 225
+    },
+    {
+      "type": "Move",
+      "tooltip": "",
+      "helpUrl": "",
+      "message0": "Move %1 Direction %2 %3 Throttle %4 %5",
+      "args0": [
+        {
+          "type": "input_dummy",
+          "name": "hint"
+        },
+        {
+          "type": "field_dropdown",
+          "name": "NAME",
+          "options": [
+            [
+              "Forwards",
+              "1"
+            ],
+            [
+              "Backwards",
+              "2"
+            ]
+          ]
+        },
+        {
+          "type": "input_value",
+          "name": "Direction"
+        },
+        {
+          "type": "field_number",
+          "name": "amount",
+          "value": 0,
+          "min": -10,
+          "max": 10
+        },
+        {
+          "type": "input_value",
+          "name": "amount"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": 225
+    },
+    {
+      "type": "Rotate",
+      "tooltip": "Max 10°",
+      "helpUrl": "",
+      "message0": "Rotate %1 Direction %2 %3 Angle %4 %5",
+      "args0": [
+        {
+          "type": "input_dummy",
+          "name": "NAME"
+        },
+        {
+          "type": "field_dropdown",
+          "name": "NAME",
+          "options": [
+            [
+              "Clockwise",
+              "1"
+            ],
+            [
+              "Counter Clockwise",
+              "2"
+            ]
+          ]
+        },
+        {
+          "type": "input_value",
+          "name": "Direction"
+        },
+        {
+          "type": "field_number",
+          "name": "angle",
+          "value": 0,
+          "min": 0,
+          "max": 10
+        },
+        {
+          "type": "input_value",
+          "name": "NAME"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": 225
+    }    
+    ]);
+    javascript.javascriptGenerator.forBlock['Vehicle'] = function(block, generator) {
+      // TODO: change Order.ATOMIC to the correct operator precedence strength
+      const value_latitute = generator.valueToCode(block, 'latitute', javascript.Order.ATOMIC);
+    
+      // TODO: change Order.ATOMIC to the correct operator precedence strength
+      const value_longitue = generator.valueToCode(block, 'longitue', javascript.Order.ATOMIC);
+    
+      // TODO: Assemble javascript into the code variable.
+      const code = 'var mySurface = new Surface('+value_latitute+', '+value_longitue+');\n';
+      return code;
+    }
+    javascript.javascriptGenerator.forBlock['Move'] = function(block, generator) {
+      const dropdown_name = block.getFieldValue('NAME');
+      // TODO: change Order.ATOMIC to the correct operator precedence strength
+      const value_direction = generator.valueToCode(block, 'Direction',javascript.Order.ATOMIC);
+    
+      const number_amount = block.getFieldValue('amount');
+      // TODO: change Order.ATOMIC to the correct operator precedence strength
+      const value_amount = generator.valueToCode(block, 'amount', javascript.Order.ATOMIC);
+    
+      // TODO: Assemble javascript into the code variable.
+      const code = 'mySurface.move('+number_amount+');\n';
+      return code;
+    }
+    javascript.javascriptGenerator.forBlock['Rotate'] = function(block, generator) {
+      const dropdown_name = block.getFieldValue('NAME');
+      // TODO: change Order.ATOMIC to the correct operator precedence strength
+      const value_direction = generator.valueToCode(block, 'Direction', javascript.Order.ATOMIC);
+    
+      const number_angle = block.getFieldValue('angle');
+      // TODO: change Order.ATOMIC to the correct operator precedence strength
+      const value_name = generator.valueToCode(block, 'NAME', javascript.Order.ATOMIC);
+    
+      // TODO: Assemble javascript into the code variable.
+      const code = 'mySurface.rotate('+number_angle+');\n';
+      return code;
+    }
+    var workspacePlayground = Blockly.inject('blocklyDiv', {
+          media: 'media/',
+          toolbox: BLOCKLY_TOOLBOX_XML['standard'],
+          zoom: {controls: true}
+        });
+
+      function showCode(){
+        javascript.javascriptGenerator.INFINITE_LOOP_TRAP = null;
+        var code =
+          javascript.javascriptGenerator.workspaceToCode(workspacePlayground);
+        alert(code);
+      }
+  </script>
+</body>
+</html>
